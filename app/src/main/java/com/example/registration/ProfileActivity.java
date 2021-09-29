@@ -139,28 +139,33 @@ mUploadApiBtn.setOnClickListener(new View.OnClickListener() {
     }
 
     private void uploadImage() {
-        File file = new File(filePath);
+//        File file = new File(filePath);
+//
+//        Retrofit retrofit = NetworkClient.getRetrofit();
+//
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+//        MultipartBody.Part parts = MultipartBody.Part.createFormData("newimage", file.getName(), requestBody);
+//
+//        RequestBody someData = RequestBody.create(MediaType.parse("text/plain"), "This is a new Image");
+//
+//        UploadApis uploadApis = retrofit.create(UploadApis.class);
+//        Call call = uploadApis.uploadImage(parts, someData);
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onResponse(Call call, Response response) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call call, Throwable t) {
+//
+//            }
+//        });
 
-        Retrofit retrofit = NetworkClient.getRetrofit();
+        Toast toast=Toast.makeText(getApplicationContext(),"Hello Javatpoint",Toast.LENGTH_SHORT);
+        toast.setMargin(50,50);
+        toast.show();
 
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part parts = MultipartBody.Part.createFormData("newimage", file.getName(), requestBody);
-
-        RequestBody someData = RequestBody.create(MediaType.parse("text/plain"), "This is a new Image");
-
-        UploadApis uploadApis = retrofit.create(UploadApis.class);
-        Call call = uploadApis.uploadImage(parts, someData);
-        call.enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) {
-
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-            }
-        });
     }
 
 //    private void pickImageFromGallery() {
