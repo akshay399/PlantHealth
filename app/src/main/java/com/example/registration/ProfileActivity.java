@@ -23,17 +23,28 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import retrofit2.Retrofit;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class ProfileActivity extends AppCompatActivity {
 
 
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
     private static final int IMAGE_PICK_CODE = 1002;
-    private Bitmap bitmap;
+    private Bitmap thumbnail;
 
     Button mUploadBtn;
     Button mCaptureBtn;
+    Button mUploadApiBtn;
     ImageView mImageView;
+    ImageView temp;
     ActivityResultLauncher<String> mGetContent;
     Uri image_uri;
 
@@ -45,6 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
         mImageView = findViewById(R.id.image_view);
         mCaptureBtn = findViewById(R.id.capture_image_btn);
         mUploadBtn = findViewById(R.id.upload_image_btn);
+        mUploadApiBtn = findViewById(R.id.upload_api_btn);
 
         //upload from gallery button click
         mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
@@ -59,6 +71,13 @@ public class ProfileActivity extends AppCompatActivity {
                 mGetContent.launch("image/*");
             }
         });
+mUploadApiBtn.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        uploadImage();
+    }
+});
+
 
 
 //        mUploadBtn.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +138,31 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    private void uploadImage() {
+        File file = new File(filePath);
+
+        Retrofit retrofit = NetworkClient.getRetrofit();
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part parts = MultipartBody.Part.createFormData("newimage", file.getName(), requestBody);
+
+        RequestBody someData = RequestBody.create(MediaType.parse("text/plain"), "This is a new Image");
+
+        UploadApis uploadApis = retrofit.create(UploadApis.class);
+        Call call = uploadApis.uploadImage(parts, someData);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
+    }
+
 //    private void pickImageFromGallery() {
 //        Intent intent = new Intent(Intent.ACTION_PICK);
 //        intent.setType("image/*");
@@ -172,10 +216,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             //set the image captured to our ImageView
+            thumbnail = (Bitmap) data.getExtras().get("data");
             mImageView.setImageURI(image_uri);
 
         }
     }
+
+
 }
 
 
